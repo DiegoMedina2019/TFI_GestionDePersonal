@@ -13,11 +13,12 @@ class RolTipoSeeder extends Seeder
     public function run()
     {
         RolTipo::create([
-            'tipo'=>'supervisor RRHH',
-            'descripcion'=>'encargado del Area RRHH',
+            'tipo'=>'supervisor',
+            'descripcion'=>'encargado del Area',
+            'sueldo'=>'200000',
             'estado'=>1
         ]);
-        RolTipo::create([
+/*         RolTipo::create([
             'tipo'=>'supervisor sistemas',
             'descripcion'=>'encargado del Area Sitemas',
             'estado'=>1
@@ -46,45 +47,65 @@ class RolTipoSeeder extends Seeder
             'tipo'=>'supervisor testing',
             'descripcion'=>'encargado del dpto testing',
             'estado'=>1
-        ]);
+        ]); */
         RolTipo::create([
             'tipo'=>'tecnico',
-            'descripcion'=>'',
+            'descripcion'=>'Mantenimiento IT',
+            'sueldo'=>'45000',
             'estado'=>1
         ]);
         RolTipo::create([
             'tipo'=>'administrativo',
             'descripcion'=>'',
+            'sueldo'=>'40000',
             'estado'=>1
         ]);
         RolTipo::create([
             'tipo'=>'tester',
-            'descripcion'=>'',
+            'descripcion'=>'preubas',
+            'sueldo'=>'50000',
             'estado'=>1
         ]);
         RolTipo::create([
             'tipo'=>'desarrollador web',
-            'descripcion'=>'',
+            'descripcion'=>'programador frontEnd, backEnd',
+            'sueldo'=>'100000',
             'estado'=>1
         ]);
         RolTipo::create([
             'tipo'=>'desarrollador mobile',
-            'descripcion'=>'',
+            'descripcion'=>'programador frontEnd, backEnd(mobile)',
+            'sueldo'=>'100000',
             'estado'=>1
         ]);
         RolTipo::create([
             'tipo'=>'relaciones publicas',
             'descripcion'=>'',
+            'sueldo'=>'47000',
             'estado'=>1
         ]);
         RolTipo::create([
             'tipo'=>'diseñador',
-            'descripcion'=>'',
+            'descripcion'=>'Estilos de fronEnd',
+            'sueldo'=>'52000',
             'estado'=>1
         ]);
         RolTipo::create([
             'tipo'=>'recruiter',
-            'descripcion'=>'',
+            'descripcion'=>'reclutador/a',
+            'sueldo'=>'40000',
+            'estado'=>1
+        ]);
+        RolTipo::create([
+            'tipo'=>'tesorera',
+            'descripcion'=>'computos',
+            'sueldo'=>'35000',
+            'estado'=>1
+        ]);
+        RolTipo::create([
+            'tipo'=>'publicista',
+            'descripcion'=>'en redes sociales y otros medios',
+            'sueldo'=>'30000',
             'estado'=>1
         ]);
     }

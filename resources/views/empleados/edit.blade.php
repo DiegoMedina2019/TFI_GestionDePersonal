@@ -6,7 +6,7 @@
         <div class="col-md-12 ml-auto mr-auto">
 
             <div class="card">
-                <div class="card-header">Edicion de Empleados</div>
+                <div class="card-header">Edicion de empleados</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -77,16 +77,7 @@
                                 <span class="badge badge-danger">{{ $errors->first('direccion')}}</span>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>Legajo:</label>
-                                <input type="number" class="form-control" name="legajo" 
-                                value="{{$empleado->legajo}}">
-                                </div>
-                                
-                                <span class="badge badge-danger">{{ $errors->first('legajo')}}</span>
-                            </div>
+                        <div class="row">                            
                             <div class="col-lg-6 col-sm-4">
                                 <div class="form-group has-default">
                                 <label>Sector:</label>
@@ -96,20 +87,44 @@
                                 
                                 <span class="badge badge-danger">{{ $errors->first('sector')}}</span>
                             </div>
+                            <div class="col-lg-6 col-sm-4">
+                                <div class="form-group">
+                                    <label>Rol Tipo:</label>
+                                    <select class="form-control"  name="roltipo" id="roltipo">
+                                        <option></option>
+                                        @foreach($rolTipos as $roltipo)
+                                            <option value="{{$roltipo->idRolTipo}}"
+                                                @if ($roltipo->idRolTipo == $empleado->fk_idRolTipo)
+                                                    {{'selected'}}
+                                                @endif >{{$roltipo->tipo." - ".$roltipo->descripcion}}</option>                        
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <span class="badge badge-danger">{{ $errors->first('roltipo')}}</span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Rol Tipo:</label>
-                            <select class="form-control"  name="roltipo" id="roltipo">
-                                <option></option>
-                                @foreach($rolTipos as $roltipo)
-                                    <option value="{{$roltipo->idRolTipo}}"
-                                        @if ($roltipo->idRolTipo == $empleado->fk_idRolTipo)
-                                            {{'selected'}}
-                                        @endif >{{$roltipo->tipo." - ".$roltipo->descripcion}}</option>                        
-                                @endforeach
-                            </select>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-4">
+                                <div class="form-group has-default">
+                                <label>Productividad: <strong id="rangeValor">0</strong></label>
+                                <input type="range" class="custom-range" name="productividad"
+                                id="productividad" 
+                                min="0" max="100"
+                                value="{{$empleado->productividad}}">                                
+                                </div>
+                                
+                                <span class="badge badge-danger">{{ $errors->first('productividad')}}</span>
+                            </div>
+                            <div class="col-lg-6 col-sm-4">
+                                <div class="form-group has-default">
+                                <label>Antiguedad:</label>
+                                <input type="number" class="form-control" name="antiguedad" 
+                                value="{{$empleado->antiguedad}}">
+                                </div>
+                                <span class="badge badge-danger">{{ $errors->first('antiguedad')}}</span>
+                            </div>
                         </div>
-                            <span class="badge badge-danger">{{ $errors->first('roltipo')}}</span>
+                        
                         <button type="submit" class="btn btn-success btn-block">Guardar</button>
 
                     </form>
@@ -122,6 +137,11 @@
 
 @section('script')
 <script>
-
+$('#productividad').on('change mousemove',function (e) {
+    $('#rangeValor').html($(this).val())
+});
+$(document).ready(function (e) {
+    $('#rangeValor').html('{{$empleado->productividad}}')
+});
 </script>
 @endsection

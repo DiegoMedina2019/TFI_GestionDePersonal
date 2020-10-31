@@ -29,6 +29,8 @@ Route::group(['middleware' => ['permission:mod-usuarios']], function () {
 });
 Route::group(['middleware' => ['permission:mod-empleados']], function () {
    Route::resource('empleados', 'EmpleadoController');
+   Route::post('addSupervisor', 'EmpleadoController@addSupervisor')->name('add.supervisor');
+   Route::get('reportes/{empleado}', 'EmpleadoController@reporte')->name('reporte');
 });
 Route::group(['middleware' => ['permission:mod-roles-permisos']], function () {
    Route::resource('roles-permisos', 'RolesPermisosController');

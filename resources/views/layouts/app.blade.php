@@ -23,13 +23,15 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    
     <style>
         .py-4 {
           /* The image used */
           background-image: url("/imagenes/fondo_quizas.jpg");
         
           /* Set a specific height */
-          height: 100vh;
+          height: auto;
         
           /* Create the parallax scrolling effect */
           background-attachment: fixed;
@@ -37,7 +39,8 @@
           background-repeat: no-repeat;
           background-size: cover;
         }
-        </style>
+    </style>
+    
 </head>
 <body>
     <div id="app">
@@ -54,14 +57,14 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         @can('mod-empleados')                            
-                            <li class="nav-item"><a class="nav-link" href="{{ route('empleados.index') }}">Empleados</a></li>
+                            <li class="nav-item d-flex align-items-center"><i class="fas fa-people-carry text-white"></i><a class="nav-link" href="{{ route('empleados.index') }}">Empleados</a></li>
                         @endcan
                         @can('mod-usuarios')                            
-                            <li class="nav-item"><a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a></li>
+                            <li class="nav-item d-flex align-items-center"><i class="fas fa-users text-white"></i><a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a></li>
                         @endcan
-                        @can('mod-roles-permisos')                            
-                            <li class="nav-item"><a class="nav-link" href="{{ route('roles-permisos.index') }}">Permisos</a></li>
-                        @endcan
+                        {{-- @can('mod-roles-permisos')                            
+                            <li class="nav-item d-flex align-items-center"><i class="fas fa-user-secret text-white"></i><a class="nav-link" href="{{ route('roles-permisos.index') }}">Permisos</a></li>
+                        @endcan --}}
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -71,11 +74,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{-- {{ __('Login') }} --}}Iniciar Sesion</a>
                             </li>
-                            @if (Route::has('register'))
+                            {{-- @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">Registrarse{{-- {{ __('Register') }} --}}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">Registrarse</a>
                                 </li>
-                            @endif
+                            @endif --}}
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -111,9 +114,12 @@
                     {{ session('warning') }}
                 </div>
             @endif
+            
             @yield('content')
+
         </main>
     </div>
+    <script src="{{ asset('js/jquery-3.2.1.min.js')}}"></script>
     <script>
         setTimeout(function() {
         $('#message').fadeOut('fast');

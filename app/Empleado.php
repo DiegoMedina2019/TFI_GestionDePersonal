@@ -16,7 +16,6 @@ class Empleado extends Model
             'dni',
             'telefono',
             'direccion',
-            'legajo',
             'sector',
             'fk_idRolTipo'
     ];
@@ -25,5 +24,15 @@ class Empleado extends Model
             $query->where('apellido', 'LIKE', $id.'%')
             ->orWhere('nombre', 'LIKE', $id.'%');
         }
+    }
+
+    public function misEmpleados()
+    {
+    return $this->belongsToMany('App\Empleado', 'supervisa_empleado', 'fk_empleado_supervisor', 'fk_empleado_empleado');
+    }
+
+    public function miSupervisores()
+    {
+    return $this->belongsToMany('App\Empleado', 'supervisa_empleado', 'fk_empleado_empleado', 'fk_empleado_supervisor');
     }
 }

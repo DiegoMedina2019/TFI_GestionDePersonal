@@ -18,9 +18,29 @@ class EmpleadoController extends Controller
      */
     public function index(Request $request)
     {
-        $empleados = Empleado::BuscarEmpleado($request->get('palabra'))->orderBy('apellido', 'DESC')
-                                ->paginate(10);
-        return view('empleados.index',compact('empleados'));
+        if (auth()->user()->hasRole('Administrador')) {
+            $empleados = Empleado::BuscarEmpleado($request->get('palabra'))
+                ->orderBy('apellido', 'DESC')
+                ->paginate(10);
+        }else{
+            $e = DB::table('empleados')
+            ->where('correo', '=', auth()->user()->email)
+            ->get();
+
+            if ($request->get('palabra')!=null) {
+                $empleados = Empleado::BuscarEmpleado($request->get('palabra'))
+                ->orderBy('apellido', 'DESC')
+                ->paginate(10);
+            } else {
+                $empleados = Empleado::find($e[0]->idempleado)->misEmpleados()
+                ->orderBy('apellido', 'DESC')
+                ->paginate(10);
+            }
+            
+            
+        }
+        $supervisores = Empleado::All()->where('fk_idRolTipo',1);
+        return view('empleados.index',compact('empleados','supervisores'));
     }
 
     /**
@@ -49,15 +69,13 @@ class EmpleadoController extends Controller
                         ->withInput($request->all());
         }
         $comprobarDNI = $request->dni;
-        $comprobarLegajo = $request->legajo;
         $empleados = DB::table('empleados')
-        ->select('dni','legajo')
+        ->select('dni')
         ->where('dni', '=', $comprobarDNI)
-        ->orWhere('legajo', '=', $comprobarLegajo)
         ->get();
         if(count($empleados) >= 1){
             return back()->withInput($request->all())
-            ->with('warning','El Empleado ya existe, intente de nuevo con un DNI O LEGAJO distinto');
+            ->with('warning','El Empleado ya existe, intente de nuevo con un DNI distinto');
         }
         else{
             $empleado = new Empleado();
@@ -68,8 +86,20 @@ class EmpleadoController extends Controller
             $empleado->telefono = $request->telefono;
             $empleado->direccion = $request->direccion;
             $empleado->sector = $request->sector;
-            $empleado->legajo = $request->legajo;
             $empleado->fk_idRolTipo = $request->roltipo;
+            $empleado->productividad = $request->productividad;
+            $empleado->antiguedad = $request->antiguedad;
+            switch (true) {
+                case ($request->productividad == 33):
+                    $empleado->insentivo = 5;
+                    break;
+                case ($request->productividad > 33) :
+                    $empleado->insentivo = ($request->productividad*15)/100 ;
+                    break;
+                default:
+                    $empleado->insentivo = 0;
+                    break;
+            }
             $empleado->save();
             return redirect()->route('empleados.index')->with('success','Empleado Cargado Correctamente');
         }    
@@ -84,8 +114,10 @@ class EmpleadoController extends Controller
     public function show($id)
     {
         $empleado = Empleado::find($id);
+        $supervisor = $empleado->miSupervisores;
+
         $rolTipos = RolTipo::All();
-        return view('empleados.show',compact('rolTipos','empleado'));
+        return view('empleados.show',compact('rolTipos','empleado','supervisor'));
     }
 
     /**
@@ -117,16 +149,14 @@ class EmpleadoController extends Controller
                         ->withInput($request->all());
         }
         $comprobarDNI = $request->dni;
-        $comprobarLegajo = $request->legajo;
         $empleados = DB::table('empleados')
-        ->select('dni','legajo','idempleado')
-        ->where('idempleado', '!=', $id)
+        ->select('dni','idempleado')
         ->where('dni', '=', $comprobarDNI)
-        ->orWhere('legajo', '=', $comprobarLegajo)
+        ->where('idempleado', '!=', $id)
         ->get();
         if(count($empleados) >= 1){
             return back()->withInput($request->all())
-            ->with('warning','El Empleado ya existe, intente de nuevo con un DNI o LEGAJO distinto');
+            ->with('warning','El Empleado ya existe, intente de nuevo con un DNI distinto');
         }
         else{
             $empleado = Empleado::find($id);
@@ -137,8 +167,20 @@ class EmpleadoController extends Controller
             $empleado->telefono = $request->telefono;
             $empleado->direccion = $request->direccion;
             $empleado->sector = $request->sector;
-            $empleado->legajo = $request->legajo;
             $empleado->fk_idRolTipo = $request->roltipo;
+            $empleado->productividad = $request->productividad;
+            $empleado->antiguedad = $request->antiguedad;
+            switch (true) {
+                case ($request->productividad == 33):
+                    $empleado->insentivo = 5;
+                    break;
+                case ($request->productividad > 33) :
+                    $empleado->insentivo = ($request->productividad*15)/100 ;
+                    break;
+                default:
+                    $empleado->insentivo = 0;
+                    break;
+            }
             $empleado->save();
             return redirect()->route('empleados.index')->with('success','Empleado Editado Correctamente');
         }  
@@ -156,6 +198,27 @@ class EmpleadoController extends Controller
         $empleado->delete();
         return redirect()->route('empleados.index')->with('success','Empleado eliminado correctamente');
     }
+    
+    public function addSupervisor(Request $request)
+    {
+        $request->validate([
+            'idsupervisor' => 'required',
+        ],[
+            'idsupervisor' => 'Debe seleccionar un supervisor',
+        ]);
+        $supervisor = Empleado::find($request->idsupervisor);
+        $supervisor->misEmpleados()->attach($request->idempleado);
+        //$supervisor->misEmpleados()->sync($request->idempleado);
+        return redirect()->route('empleados.index')->with('success','Supervisor asignado correctamente');
+    }
+    public function reporte($id)
+    {
+        $empleado = Empleado::find($id);
+        $rolTipos = RolTipo::All();
+        $supervisor = $empleado->miSupervisores;
+        return view('empleados.reporte',compact('rolTipos','empleado','supervisor'));
+    }
+
     public function validarRequest(Request $request)
     {
         $validado = Validator::make($request->all(), [
@@ -166,7 +229,6 @@ class EmpleadoController extends Controller
             'telefono'=>'required|numeric',
             'direccion' => 'required',
             'sector'=>'required',
-            'legajo'=>'required',
             'roltipo' => 'required',
             //'file' => 'mimes:jpeg,png,jpg,gif',
         ],[
@@ -177,7 +239,6 @@ class EmpleadoController extends Controller
             'telefono'=>'El telefono es requerido',
             'direccion' => 'La direccion es requerida',
             'sector'=>'La sector es requerido',
-            'legajo'=>'El legajo es requerido',
             'roltipo' => 'El Rol Tipo es requerido',
             //'file' => 'el archivo debe ser de tipo jpeg,png o jpg',
         ]);

@@ -21,8 +21,10 @@ class CreateEmpleadosTable extends Migration
             $table->unsignedBigInteger('dni');
             $table->unsignedBigInteger('telefono')->nullable();
             $table->string('direccion');
-            $table->unsignedBigInteger('legajo');
             $table->string('sector')->nullable();
+            $table->unsignedBigInteger('productividad')->nullable();
+            $table->decimal('insentivo',3,1)->nullable();
+            $table->unsignedBigInteger('antiguedad')->nullable();
             $table->unsignedBigInteger('fk_idRolTipo');
             $table->timestamps();
 

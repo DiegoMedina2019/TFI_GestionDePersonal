@@ -17,6 +17,7 @@ class CreateRolTiposTable extends Migration
             $table->id('idRolTipo');
             $table->string('tipo');
             $table->string('descripcion');
+            $table->decimal('sueldo',9,2)->nullable();
             $table->unsignedInteger('estado');
             $table->timestamps();
         });

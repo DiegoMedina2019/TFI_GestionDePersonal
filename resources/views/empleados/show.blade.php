@@ -12,102 +12,207 @@
 
                     <div class="row">
                       <a href="{{route('empleados.index')}}"; class="btn btn-info" style="margin-left: 2%;margin-bottom: 2%;">Voler</a>
+                      <a href="{{route('reporte',$empleado->idempleado)}}"; class="btn btn-dark" style="margin-left: 2%;margin-bottom: 2%;">Generar reporte</a>
                     </div>
-                    <form id="empleados_store" action="{{ route('empleados.update',$empleado->idempleado) }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        {{ method_field('PUT') }}
+            
+                    <div>
+
+                        <h1>Empleado</h1>
+                        <u><h3 class="text-center">{{$empleado->apellido.', '.$empleado->nombre}}</h3></u>
+
+                        
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group has-default">
+                            <label>Productividad:</label>
+                            <div class="progress">
+                            <div class="progress-bar" style="width:{{$empleado->productividad}}%">{{$empleado->productividad}}%</div>
+                            </div>
+                            </div>
+                            
+                            <span class="badge badge-danger">{{ $errors->first('nombre')}}</span>
+                        </div>
+
                         <div class="row">
-                            <div class="col-lg-6 col-sm-4">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group has-default">
-                                <label>Nombre:</label>
-                                <input type="text" class="form-control" name="nombre" 
-                                value="{{$empleado->nombre}}" disabled>
+                                <label>Correo:</label>
+                                <strong>{{$empleado->correo}}</strong>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group has-default">
+                                <label>DNI:</label>
+                                <strong>{{$empleado->dni}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group has-default">
+                                <label>Telefono:</label>
+                                <strong>{{$empleado->telefono}}</strong>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group has-default">
+                                <label>Direccion:</label>
+                                <strong>{{$empleado->direccion}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">                            
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group has-default">
+                                <label>Sector:</label>
+                                <strong>{{$empleado->sector}}</strong>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label>Rol Tipo:</label>
+                                    @foreach($rolTipos as $roltipo)
+                                        <strong>
+                                            @if ($roltipo->idRolTipo == $empleado->fk_idRolTipo)
+                                            @php
+                                                $sueldoBase = $roltipo->sueldo;
+                                                $sueldo = $sueldoBase + ( ($empleado->insentivo * $sueldoBase )/100 );
+                                            @endphp
+                                            {{$roltipo->tipo." - ".$roltipo->descripcion}}
+                                            @endif                                            
+                                        </strong>                        
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group has-default">
+                                <label>Insentivo:</label>
+                                <strong>{{$empleado->insentivo}}%</strong>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group has-default">
+                                <label>Antiguedad:</label>
+                                <strong>{{$empleado->antiguedad}} Años</strong>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="d-flex justify-content-star">
+                            <div class="form-group has-default">
+                            <label>Sueldo Base:</label>
+                            <strong>${{$sueldoBase }}</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <div class="form-group">
+                            <h2>Sueldo:<strong>${{$sueldo}}</strong></h2>                            
+                            </div>
+                        </div>                            
+  
+                        
+                        
+                        
+                        @foreach ($supervisor as $sup)
+                            <hr>
+                            <h1>Supervisor</h1>
+                            
+                            <u><h3 class="text-center">{{$sup->apellido.', '.$sup->nombre}}</h3></u>
+                          
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group has-default">
+                                <label>Productividad:</label>
+                                <div class="progress">
+                                <div class="progress-bar" style="width:{{$sup->productividad}}%">{{$sup->productividad}}%</div>
+                                </div>
                                 </div>
                                 
                                 <span class="badge badge-danger">{{ $errors->first('nombre')}}</span>
                             </div>
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>Apellido:</label>
-                                <input type="text" class="form-control" name="apellido" 
-                                value="{{$empleado->apellido}}" disabled>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group has-default">
+                                    <label>Correo:</label>
+                                        <strong>{{$sup->correo}}</strong>                                    
+                                    </div>
                                 </div>
-                                <span class="badge badge-danger">{{ $errors->first('apellido')}}</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>Correo:</label>
-                                <input type="email" class="form-control" name="correo" 
-                                value="{{$empleado->correo}}" disabled>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group has-default">
+                                    <label>DNI:</label>
+                                        <strong>{{$sup->dni}}</strong>                                    
+                                    </div>
                                 </div>
-                                
-                                <span class="badge badge-danger">{{ $errors->first('correo')}}</span>
                             </div>
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>DNI:</label>
-                                <input type="number" class="form-control" name="dni" 
-                                value="{{$empleado->dni}}" disabled>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group has-default">
+                                    <label>Telefono:</label>
+                                        <strong>{{$sup->telefono}}</strong>                                    
+                                    </div>
                                 </div>
-                                <span class="badge badge-danger">{{ $errors->first('dni')}}</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>Telefono:</label>
-                                <input type="number" class="form-control" name="telefono" 
-                                value="{{$empleado->telefono}}" disabled>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group has-default">
+                                    <label>Direccion:</label>
+                                        <strong>{{$sup->direccion}}</strong>                                    
+                                    </div>
                                 </div>
-                                
-                                <span class="badge badge-danger">{{ $errors->first('telefono')}}</span>
                             </div>
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>Direccion:</label>
-                                <input type="text" class="form-control" name="direccion" 
-                                value="{{$empleado->direccion}}" disabled>
+                            <div class="row">                            
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group has-default">
+                                    <label>Sector:</label>
+                                        <strong>{{$sup->sector}}</strong>                                    
+                                    </div>
                                 </div>
-                                <span class="badge badge-danger">{{ $errors->first('direccion')}}</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>Legajo:</label>
-                                <input type="number" class="form-control" name="legajo" 
-                                value="{{$empleado->legajo}}" disabled>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Rol Tipo:</label>
+                                            @foreach($rolTipos as $roltipo)
+                                                <strong>
+                                                    @if ($roltipo->idRolTipo == $sup->fk_idRolTipo)
+                                                    @php
+                                                        $sueldoBase = $roltipo->sueldo;                                                        
+                                                        $sueldo = $sueldoBase + ( ($sup->insentivo * $sueldoBase )/100 );
+                                                    @endphp
+                                                    {{$roltipo->tipo." - ".$roltipo->descripcion}}
+                                                    @endif                                            
+                                                </strong>                        
+                                            @endforeach
+                                    </div>
                                 </div>
-                                
-                                <span class="badge badge-danger">{{ $errors->first('legajo')}}</span>
                             </div>
-                            <div class="col-lg-6 col-sm-4">
-                                <div class="form-group has-default">
-                                <label>Sector:</label>
-                                <input type="text" class="form-control" name="sector" 
-                                value="{{$empleado->sector}}" disabled>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group has-default">
+                                    <label>Insentivo:</label>
+                                    <strong>{{$sup->insentivo}}%</strong>
+                                    </div>
                                 </div>
-                                
-                                <span class="badge badge-danger">{{ $errors->first('sector')}}</span>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group has-default">
+                                    <label>Antiguedad:</label>
+                                    <strong>{{$sup->antiguedad}} Años</strong>
+                                    </div>
+                                </div>                            
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Rol Tipo:</label>
-                            <select class="form-control" disabled name="roltipo" id="roltipo">
-                                <option></option>
-                                @foreach($rolTipos as $roltipo)
-                                    <option value="{{$roltipo->idRolTipo}}"
-                                        @if ($roltipo->idRolTipo == $empleado->fk_idRolTipo)
-                                            {{'selected'}}
-                                        @endif >{{$roltipo->tipo." - ".$roltipo->descripcion}}</option>                        
-                                @endforeach
-                            </select>
-                        </div>
-                            <span class="badge badge-danger">{{ $errors->first('roltipo')}}</span>
+                            <div class="d-flex justify-content-star">
+                                <div class="form-group has-default">
+                                <label>Sueldo Base:</label>
+                                <strong>${{$sueldoBase }}</strong>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <div class="form-group">
+                                <h2>Sueldo:<strong>${{$sueldo}}</strong></h2>                            
+                                </div>
+                            </div> 
 
-                    </form>
+                        @endforeach
+
+
+                    </div>
+
+
                 </div>
             </div>
         </div>

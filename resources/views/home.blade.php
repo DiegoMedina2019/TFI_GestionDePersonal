@@ -6,7 +6,7 @@
         <div class="col-md-8 ml-auto mr-auto">
             
 
-            <div class="brand text-center " style="color: black; margin-top: 25%;">
+            <div class="brand text-center " style="color: black; margin-top: 25%;height: 100vh;">
                 <u><h1 class="display-1">Bienvenido</h1></u>
                 <u> <h3 class="title text-center display-4">{{Auth::user()->name}}</h3></u>
                
