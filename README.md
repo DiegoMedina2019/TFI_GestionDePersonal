@@ -24,6 +24,7 @@ El cual exigia la resolucion de un modulo de Empleados donde debiamos considerar
  - clone este repositorio con: git clone https://github.com/DiegoMedina2019/TFI_GestionDePersonal
  - una vez en su directorio ejecute el comando: composer update
  - luego configure el archivo .env tomando como ejemplo el archivo .env.example
+ - ejecute php artisan migrate --seed para generar la DB y las tablas necesarias (tendra un usuario Administrador por defecto) los datos del administrador podra verlo en el directorio /database/seeds/UserSeeder.php
  - por ultimo ejecute el comando php artisan serve para ejecutar el sistema en su PC
 
 ## About Laravel
